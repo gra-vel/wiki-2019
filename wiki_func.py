@@ -4,9 +4,10 @@ Created on Wed Aug  5 16:54:44 2020
 @author: Gabriel Velástegui
 """
 
-from datetime import timedelta, date
+import datetime
 
-def daterange(start_date, end_date):
-    for n in range(int((end_date - start_date).days)):
-        yield start_date + timedelta(n)
-
+def daterange(year, month):
+    first_day = datetime.date(int(year), int(month), 1)
+    last_day = datetime.date(int(year), int(month)+1, 1) - datetime.timedelta(days=1)
+    return (first_day.strftime("%Y%m%d"), last_day.strftime("%Y%m%d"))
+    
