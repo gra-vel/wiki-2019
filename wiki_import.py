@@ -76,3 +76,4 @@ def daily_data(lang, access, agent, year, month):
     return df_month
 
 df_month = daily_data("es", "all-access", "all-agents", "2019", "01")
+df_month.to_csv("dataset\\" + "2019" + "_" + "01" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
