@@ -32,12 +32,17 @@ def month_data(lang, access, year):
             #exceptions
             df = df[~df.article.str.contains('Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito')].reset_index(drop = True)
             df = df.iloc[0:15] #_increased to 15 because of bot searches
-            df.to_csv("dataset\\" + year + "_" + str(i).zfill(2) + "_" + lang + "_wikimonth.csv", index = False, encoding = 'latin')
+            df['month'] = str(i).zfill(2)            
+            if i == 1:                
+                ini_df = df
+            else:
+                ini_df = pd.concat([ini_df, df])
+    ini_df.to_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", index = False, encoding = 'latin')
 
 # month_data("es", "all-access", "2019")
 
 # Importing daily data
-def daily_data(lang, access, agent, year, month):
+def daily_data(lang, access, agent, year):
     '''
     retrieves daily data based on output of month_data fn
     lang: string (en, es, de, etc.) / language of the project
@@ -49,31 +54,34 @@ def daily_data(lang, access, agent, year, month):
     return: dataframe
     '''
     encode_lang = {'en':'UTF-8', 'es': 'latin1', 'de':'UTF-8'}
-    df = pd.read_csv("dataset\\" + year + "_" + month + "_" + lang + "_wikimonth.csv", encoding = encode_lang[lang])
-    df = df.iloc[0:10]
-    top_articles = df.article.to_list()
-    #loop for articles
-    initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
-    user_access = access + "/"
-    user_agent = agent + "/"
-    base_url = initial_url + lang + ".wikipedia.org/" + user_access + user_agent
+    df1 = pd.read_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", encoding = encode_lang[lang])
     st = 0
-    for article in top_articles:
-        print('retrieving: ' + article + ' views for ' + month + '/' + year)
-        #looping over month
-        start_date, end_date = wiki_func.daterange(year, month)
-        wiki_url = base_url + quote(article) + "/daily/" + start_date + "/" + end_date
-        #importing daily data
-        with urllib.request.urlopen(wiki_url) as url:
-            data = json.loads(url.read().decode())
-        df1 = pd.json_normalize(data["items"])
-        df1 = df1.iloc[:,[1,3,6]] #picks columns of interest
-        if st == 0:
-            df_month = df1
-            st +=1
-        else:
-            df_month = pd.concat([df_month, df1])
+    for i in range(1,13):
+        df = df1[df1['month'].isin([i])]
+        df = df.iloc[0:10]
+        top_articles = df.article.to_list()
+        #loop for articles
+        initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
+        user_access = access + "/"
+        user_agent = agent + "/"
+        base_url = initial_url + lang + ".wikipedia.org/" + user_access + user_agent
+        for article in top_articles:
+            print('retrieving: ' + article + ' views for ' + str(i) + '/' + year)
+            #looping over month
+            start_date, end_date = wiki_func.daterange(year, str(i))
+            wiki_url = base_url + quote(article) + "/daily/" + start_date + "/" + end_date
+            #importing daily data
+            with urllib.request.urlopen(wiki_url) as url:
+                data = json.loads(url.read().decode())
+            df2 = pd.json_normalize(data["items"])
+            df2 = df2.iloc[:,[1,3,6]] #picks columns of interest
+            df2['month'] = i
+            if st == 0:
+                df_month = df2
+                st +=1
+            else:
+                df_month = pd.concat([df_month, df2])
     return df_month
 
-df_month = daily_data("es", "all-access", "all-agents", "2019", "01")
-df_month.to_csv("dataset\\" + "2019" + "_" + "01" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
+# df_month = daily_data("es", "all-access", "all-agents", "2019")
+# df_month.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
