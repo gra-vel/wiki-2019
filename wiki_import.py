@@ -30,7 +30,8 @@ def month_data(lang, access, year):
             df = pd.json_normalize(data["items"][0]["articles"])
             df = df.iloc[0:50]
             #exceptions
-            df = df[~df.article.str.contains('Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito')].reset_index(drop = True)
+            if lang == 'es':
+                df = df[~df.article.str.contains('Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito|Kayden_Boche')].reset_index(drop = True)
             df = df.iloc[0:15] #_increased to 15 because of bot searches
             df['month'] = str(i).zfill(2)            
             if i == 1:                
@@ -83,5 +84,5 @@ def daily_data(lang, access, agent, year):
                 df_month = pd.concat([df_month, df2])
     return df_month
 
-# df_month = daily_data("es", "all-access", "all-agents", "2019")
-# df_month.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
+df_month = daily_data("es", "all-access", "all-agents", "2019")
+df_month.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
