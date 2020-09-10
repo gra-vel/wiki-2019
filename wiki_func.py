@@ -11,6 +11,7 @@ def daterange(year, month):
     creates start and end date for daily data fn
     year: string
     month: string
+    return: string for date
     '''
     first_day = datetime.date(int(year), int(month), 1)
     if int(month) < 12:
@@ -21,20 +22,35 @@ def daterange(year, month):
 
 
 def create_url(lang, access, agent):
+    '''
+    creates list with urls for api
+    lang: string
+    access: string
+    agent: string
+    return: list of strings
+    '''
     all_url = []
     initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/" + lang + ".wikipedia.org"    
-    l_access = ['desktop','mobile-app','mobile-web']
-    l_agent = ['user','spider','automated']
-    if access == "all_access" and agent == "all_agent":
-        for each_access in l_access:
-            for each_agent in l_agent:
-                all_url.append(initial_url + "/" + each_access + "/" + each_agent + "/")
-    elif access == "all_access":
+    l_access = ['desktop','mobile-app','mobile-web']    
+    if access == "all-access":
         for each_access in l_access:
             all_url.append(initial_url + "/" + each_access + "/" + agent + "/")
-    elif agent == "all_agent":
-        for each_agent in l_agent:
-            all_url.append(initial_url + "/" + access + "/" + each_agent + "/")
     else:
         all_url.append(initial_url + "/" + access + "/" + agent + "/")
     return all_url
+
+
+def change_view_access(df, access, sf):
+    '''
+    changes name of column 'views' to string in 'access'
+    df: dataframe
+    access: string
+    sf: int
+    return: df
+    '''
+    dict_agents = {0:"desktop", 1:"mobile-app", 2:"mobile-web"}
+    if access == "all-access":        
+        df = df.rename(columns={'views':dict_agents[sf]})        
+    else:
+        pass    
+    return df
