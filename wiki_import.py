@@ -8,6 +8,7 @@ import wiki_func
 import pandas as pd
 import urllib.request, json
 from urllib.parse import quote
+import time
 
 # Importing monthly data
 def month_data(lang, access, year):
@@ -35,9 +36,7 @@ def month_data(lang, access, year):
             df = pd.json_normalize(data["items"][0]["articles"])
             df = df.iloc[0:50]
             #exceptions
-            df = df[~df.article.str.contains(exceptions_lang[lang])].reset_index(drop = True)
-            # if lang == 'es':
-            #     df = df[~df.article.str.contains('Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito|Kayden_Boche')].reset_index(drop = True)
+            df = df[~df.article.str.contains(exceptions_lang[lang])].reset_index(drop = True)            
             df = df.iloc[0:15] #_increased to 15 because of bot searches
             df['month'] = str(i).zfill(2)            
             if i == 1:                
@@ -70,6 +69,7 @@ def daily_data(lang, access, year, agent='user'):
     month_loop = 0
     #loop for months
     for i in range(1,13):
+        time.sleep(10)
         df = df1[df1['month'].isin([i])]
         df = df.iloc[0:10]
         top_articles = df.article.to_list()
@@ -80,7 +80,7 @@ def daily_data(lang, access, year, agent='user'):
             start_date, end_date = wiki_func.daterange(year, str(i))
             st = 0
             #loop for articles
-            for article in top_articles:
+            for article in top_articles:                
                 print('retrieving: ' + article + ' views for ' + str(i) + '/' + year)
                 wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date
                 with urllib.request.urlopen(wiki_url) as url:
