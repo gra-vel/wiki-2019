@@ -21,7 +21,7 @@ def month_data(lang, access, year):
     '''
     encode_lang = {'en':'utf-16', 'es': 'latin1', 'de':'utf-16', 'ru':'utf-16'}
     exceptions_lang = {'es':'Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito|Kayden_Boche',
-                       'en':'Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Main_Page|Portal:|File:|XHamster|Grover|Louis_Tomlinson|Rheology|Line_shaft|William_Murdoch|Kayden_Boche',
+                       'en':'Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Main_Page|Portal:|File:|XHamster|Grover|Louis_Tomlinson|Rheology|Line_shaft|William_Murdoch|Kayden_Boche|Algorithms_for_calculating_variance',
                        'de':'Wikipedia:|Especial:|Special:|Spécial:|Spezial:|Benutzer:|Datei:|Hauptseite|Anthocyane|Antoni_Tàpies|Formelsammlung_Trigonometrie|Pornhub|XHamster|Tobias_Sammet|Edguy|Avantasia|St�ckgut|Sch�ttgut|F�rdertechnik',
                        'ru':'Wikipedia:|Especial:|Special:|Заглавная_страница|Служебная:|Википедия:|Файл:|Borderlands:_The_Pre-Sequel!|YouTube'}
     initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/"
@@ -66,24 +66,23 @@ def daily_data(lang, access, year, agent='user'):
     encode_lang = {'en':'utf-16', 'es':'latin1', 'de':'utf-16', 'ru':'utf-16'}
     #read csv with monthly data
     df1 = pd.read_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", encoding = encode_lang[lang])
-    month_loop = 0
+    month_loop = 0    
     #loop for months
-    for i in range(1,13):
-        time.sleep(10)
+    for i in range(1,13):        
         df = df1[df1['month'].isin([i])]
         df = df.iloc[0:10]
         top_articles = df.article.to_list()
         url_list = wiki_func.create_url(lang, access, agent)
         sf = 0
         #loop for urls (depends on access and agents)
-        for each_url in url_list:
+        for each_url in url_list:            
             start_date, end_date = wiki_func.daterange(year, str(i))
             st = 0
             #loop for articles
             for article in top_articles:                
                 print('retrieving: ' + article + ' views for ' + str(i) + '/' + year)
-                wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date
-                with urllib.request.urlopen(wiki_url) as url:
+                wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date                
+                with urllib.request.urlopen(wiki_url,timeout=60) as url:
                     data = json.loads(url.read().decode())
                 df2 = pd.json_normalize(data["items"])
                 df2 = df2.iloc[:,[1,3,6]]
@@ -102,18 +101,23 @@ def daily_data(lang, access, year, agent='user'):
                 df_month = wiki_func.change_view_access(df_month, access, sf)
                 df_month = df_month.iloc[:,2]
                 df3 = pd.merge(df3, df_month, left_index=True, right_index=True)
-                sf += 1            
+                sf += 1
+                time.sleep(10)
         #appends complete data for different months
         if month_loop == 0:
             df_end = df3
             month_loop += 1
         else:
             df_end = pd.concat([df_end, df3])
+            time.sleep(30)
     return df_end
 
-df_month_es = daily_data("es", "all-access", "2019")
-df_month_en = daily_data("en", "all-access", "2019")
-df_month_de = daily_data("de", "all-access", "2019")
-df_month_ru = daily_data("ru", "all-access", "2019")
+# df_month_es = daily_data("es", "all-access", "2019")
+# df_month_en = daily_data("en", "all-access", "2019")
+# df_month_de = daily_data("de", "all-access", "2019")
+# df_month_ru = daily_data("ru", "all-access", "2019")
 
-df_month_es.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
+# df_month_es.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
+# df_month_de.to_csv("dataset\\" + "2019" + "_" + "de" + "_wikidaily.csv", index = False, encoding = 'utf-16')
+# df_month_en.to_csv("dataset\\" + "2019" + "_" + "en" + "_wikidaily.csv", index = False, encoding = 'utf-16')
+# df_month_ru.to_csv("dataset\\" + "2019" + "_" + "ru" + "_wikidaily.csv", index = False, encoding = 'utf-16')
