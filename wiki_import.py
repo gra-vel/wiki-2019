@@ -20,10 +20,10 @@ def month_data(lang, access, year):
     year: string (YYYY) / year of query
     '''
     encode_lang = {'en':'utf-16', 'es': 'latin1', 'de':'utf-16', 'ru':'utf-16'}
-    exceptions_lang = {'es':'Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito|Kayden_Boche',
+    exceptions_lang = {'es':'Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Martina_Stoessel|Lali_Espósito|Kayden_Boche|Día_Mundial_Sin_Tabaco|Signo_zodiacal',
                        'en':"Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Main_Page|Portal:|File:|XHamster|Grover|Louis_Tomlinson|Rheology|Line_shaft|William_Murdoch|Kayden_Boche|Algorithms_for_calculating_variance|Jay_IDK|List_of_Queen_of_the_South_episodes|Bible|Wikipedia|List_of_most_popular_websites|Simple_Mail_Transfer_Protocol|IPv4|Apple_Network_Server|List_of_awards_and_nominations_received_by_Meryl_Streep|The_Who|Who's_Next|Capture_of_Shusha",
-                       'de':'Wikipedia:|Especial:|Special:|Spécial:|Spezial:|Benutzer:|Datei:|Hauptseite|Anthocyane|Antoni_Tàpies|Formelsammlung_Trigonometrie|Pornhub|XHamster|Tobias_Sammet|Edguy|Avantasia|St�ckgut|Sch�ttgut|F�rdertechnik',
-                       'ru':'Wikipedia:|Especial:|Special:|Заглавная_страница|Служебная:|Википедия:|Файл:|Borderlands:_The_Pre-Sequel!|YouTube'}
+                       'de':'Wikipedia:|Especial:|Special:|Spécial:|Spezial:|Benutzer:|Datei:|Hauptseite|Anthocyane|Antoni_Tàpies|Formelsammlung_Trigonometrie|Pornhub|XHamster|Tobias_Sammet|Edguy|Avantasia|St�ckgut|Sch�ttgut|F�rdertechnik|Hacker|Fibromyalgie|Alphastrahlung|John_Alcock_(Pilot)|Fußball_2000|Videoschnittsoftware|Ötzi|OpenSearch|Alfred_Werner_Maurer|Design_Thinking|Fußball-Weltmeisterschaft_2018|Paramore|ARD|ZDF',
+                       'ru':'Wikipedia:|Especial:|Special:|Заглавная_страница|Служебная:|Википедия:|Файл:|Borderlands:_The_Pre-Sequel!|YouTube|Гарри_Поттер|Мамонтов,_Савва_Иванович|Тест_Тьюринга|Морские_термины|Эффект_Даннинга_—_Крюгера|Loopback|Список_фильмов_кинематографической_вселенной_Marvel|HTML|Скалярное_произведение|Нарака|Воскресение_(роман)|Клинический_архив_гениальности_и_одарённости|ВКонтакте|Стрыйковский,_Матей'}
     initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/"
     proj = lang + ".wikipedia.org/"
     user_access = access + "/"
@@ -113,11 +113,11 @@ def daily_data(lang, access, year, agent='user'):
     return df_end
 
 # df_month_es = daily_data("es", "all-access", "2019")
-df_month_en = daily_data("en", "all-access", "2019")
+# df_month_en = daily_data("en", "all-access", "2019")
 # df_month_de = daily_data("de", "all-access", "2019")
 # df_month_ru = daily_data("ru", "all-access", "2019")
 
 # df_month_es.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
 # df_month_de.to_csv("dataset\\" + "2019" + "_" + "de" + "_wikidaily.csv", index = False, encoding = 'utf-16')
-df_month_en.to_csv("dataset\\" + "2019" + "_" + "en" + "_wikidaily.csv", index = False, encoding = 'utf-16')
+# df_month_en.to_csv("dataset\\" + "2019" + "_" + "en" + "_wikidaily.csv", index = False, encoding = 'utf-16')
 # df_month_ru.to_csv("dataset\\" + "2019" + "_" + "ru" + "_wikidaily.csv", index = False, encoding = 'utf-16')
