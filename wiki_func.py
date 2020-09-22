@@ -54,3 +54,38 @@ def change_view_access(df, access, sf):
     else:
         pass    
     return df
+
+def all_access_analysis(df):
+    '''
+    for all-access dataframe. gets views percentage according each access per day.
+    also normalizes views per article and month.
+    df: dataframe
+    return. df
+    '''
+    df = df.assign(total = df['desktop'] + df['mobile-app'] + df['mobile-web'],
+                   desk = df['desktop']/(df['desktop'] + df['mobile-app'] + df['mobile-web']),
+                   app = df['mobile-app']/(df['desktop'] + df['mobile-app'] + df['mobile-web']),
+                   web = df['mobile-web']/(df['desktop'] + df['mobile-app'] + df['mobile-web']))
+    
+    df = df.rename(columns = {'desktop':'norm_desk',
+                              'mobile-app':'norm_app',
+                              'mobile-web':'norm_web'})
+    
+    grouper = df.groupby(['month','article'])['norm_desk']
+    maxes = grouper.transform('max')
+    mins = grouper.transform('min')
+    df = df.assign(norm_desk=(df.norm_desk- mins)/(maxes - mins))
+    
+    grouper = df.groupby(['month','article'])['norm_app']
+    maxes = grouper.transform('max')
+    mins = grouper.transform('min')
+    df = df.assign(norm_app=(df.norm_app - mins)/(maxes - mins))
+    
+    grouper = df.groupby(['month','article'])['norm_web']
+    maxes = grouper.transform('max')
+    mins = grouper.transform('min')
+    df = df.assign(norm_web=(df.norm_web- mins)/(maxes - mins))
+    
+    df = df[['article', 'timestamp', 'month', 'days', 'desk', 'app', 'web', 'total', 'norm_desk', 'norm_app', 'norm_web']]
+    return df
+    
