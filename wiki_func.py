@@ -5,8 +5,6 @@ Created on Wed Aug  5 16:54:44 2020
 """
 
 import datetime
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 def daterange(year, month):
     '''
@@ -56,68 +54,3 @@ def change_view_access(df, access, sf):
     else:
         pass    
     return df
-
-
-def all_access_analysis(df):
-    '''
-    for all-access dataframe. gets views percentage according each access per day.
-    also normalizes views per article and month.
-    df: dataframe
-    return: df
-    '''
-    df = df.assign(total = df['desktop'] + df['mobile-app'] + df['mobile-web'],
-                   desk = df['desktop']/(df['desktop'] + df['mobile-app'] + df['mobile-web']),
-                   app = df['mobile-app']/(df['desktop'] + df['mobile-app'] + df['mobile-web']),
-                   web = df['mobile-web']/(df['desktop'] + df['mobile-app'] + df['mobile-web']))
-    
-    df = df.rename(columns = {'desktop':'norm_desk',
-                              'mobile-app':'norm_app',
-                              'mobile-web':'norm_web'})
-    
-    grouper = df.groupby(['month','article'])['norm_desk']
-    maxes = grouper.transform('max')
-    mins = grouper.transform('min')
-    df = df.assign(norm_desk=(df.norm_desk- mins)/(maxes - mins))
-    
-    grouper = df.groupby(['month','article'])['norm_app']
-    maxes = grouper.transform('max')
-    mins = grouper.transform('min')
-    df = df.assign(norm_app=(df.norm_app - mins)/(maxes - mins))
-    
-    grouper = df.groupby(['month','article'])['norm_web']
-    maxes = grouper.transform('max')
-    mins = grouper.transform('min')
-    df = df.assign(norm_web=(df.norm_web- mins)/(maxes - mins))
-    
-    df = df[['article', 'timestamp', 'month', 'days', 'desk', 'app', 'web', 'total', 'norm_desk', 'norm_app', 'norm_web']]
-    return df
-    
-
-def article_heatmap(df, article, month):
-    '''
-    creates heatmap for method of access and number of views
-    df: dataframe
-    article: str
-    month: int
-    '''
-    try:
-        df = df[df['month'].isin([month])]
-        df.loc[:,'Date'] = df['timestamp'].apply(lambda x:x.strftime('%m/%d'))
-        df = df.drop(columns=['timestamp'])
-        df.set_index('Date', inplace = True)
-        fig, (ax1,ax2) = plt.subplots(1,2)
-        sns.heatmap(df[df['article'].isin([article])][['desk', 'app', 'web']],
-            cmap=sns.color_palette('viridis'),
-            annot = True,
-            robust = False,
-            ax = ax1)
-        ax1.set_title(article + "/" + str(month) + ": by access (percentage per day)")
-        sns.heatmap(df[df['article'].isin([article])][['norm_desk', 'norm_app', 'norm_web']], 
-            cmap=sns.diverging_palette(220, 20, as_cmap=True),
-            ax = ax2)
-        ax2.set_title(article + "/" + str(month) + ": views (normalized per month)")
-        ax2.set_xticklabels(ax2.get_xticklabels(),rotation=0)
-        plt.show()
-    except ValueError:
-        plt.close(fig)
-        print("ValueError: article not found. use '_' to connect words.")
