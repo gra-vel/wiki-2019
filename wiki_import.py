@@ -42,10 +42,9 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
             data = json.loads(url.read().decode())
             df = pd.json_normalize(data["items"][0]["articles"])
             df = df.iloc[0:50]
-            #exceptions
-            #df = df[~df.article.str.contains(x for x in exceptions_lang[lang])].reset_index(drop = True)
+            #exceptions            
             df = df[~df.article.str.contains(exceptions_lang[lang])].reset_index(drop = True)
-            df = df.iloc[0:15] #_increased to 15 because of bot searches
+            df = df.iloc[0:15] #increased to 15 because of bot searches
             df['month'] = str(i).zfill(2)            
             if i == 1:                
                 ini_df = df

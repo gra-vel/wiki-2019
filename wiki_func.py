@@ -5,6 +5,7 @@ Created on Wed Aug  5 16:54:44 2020
 """
 
 import datetime
+import pandas as pd
 
 def daterange(year, month):
     '''
@@ -53,4 +54,17 @@ def change_view_access(df, access, sf):
         df = df.rename(columns={'views':dict_agents[sf]})        
     else:
         pass    
+    return df
+
+def format_analysis(df):
+    '''
+    changes format of columns in dataframe
+    df: dataframe
+    return: df
+    '''
+    #for timestamp
+    df['timestamp'] = pd.to_datetime(df['timestamp'], format='%Y%m%d%H')
+    df['week'] = [d.isoweekday() for d in df['timestamp']]
+    #for article
+    df['article'] = df['article'].str.replace('_', ' ')
     return df

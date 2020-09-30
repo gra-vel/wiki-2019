@@ -4,6 +4,7 @@ Created on Mon Sep 28 12:06:17 2020
 @author: Gabriel Velástegui
 """
 
+import wiki_func
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -21,14 +22,15 @@ class wiki_all_access(object):
             encoding: encoding of csv file - latin1/utf-16 (str)
         '''
         self.df = pd.read_csv("dataset\\" + filename, encoding = encoding)
-        self.df['days'] = self.df.groupby(["month", "article"]).cumcount()
+        self.df['days'] = self.df.groupby(["month", "article"]).cumcount()+1
         
     
     def get_df(self):
         '''
         Returns:
-            dataframe with raw data
+            dataframe with raw data plus total views
         '''
+        self.df = self.df.assign(total = self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web'])
         return self.df
     
     
@@ -36,7 +38,7 @@ class wiki_all_access(object):
         '''
         Calculate total views and percent of views by each method of access.
         Normalize monthly views by each method of access.
-        Changes format of 'timestamp'
+        Changes format of 'timestamp' and 'article'
         Returns:
             dataframe with percent and normalized data
         '''
@@ -66,9 +68,8 @@ class wiki_all_access(object):
         mins = grouper.transform('min')
         df_analysis = df_analysis.assign(norm_web=(df_analysis.norm_web- mins)/(maxes - mins))
         
-        #format of timestamp
-        df_analysis['timestamp'] = pd.to_datetime(df_analysis['timestamp'], format='%Y%m%d%H')
-        df_analysis['week']= [d.isoweekday() for d in df_analysis['timestamp']]
+        #format of timestamp and article
+        df_analysis = wiki_func.format_analysis(df_analysis)        
         
         df_analysis = df_analysis[['article', 'timestamp', 'month', 'days', 'desk', 'app', 'web', 'total', 'norm_desk', 'norm_app', 'norm_web', 'week']]            
         return df_analysis
@@ -101,7 +102,8 @@ class wiki_all_access(object):
         g = sns.FacetGrid(self.df_plot(month), col='article', row='access', hue='article', margin_titles=True)
         g.map(sns.barplot, 'days', 'views', order=list(range(1,32)))
         g.set_titles(col_template='{col_name}', size=8.5)
-        g.set(xticks=[5,15,25])
+        g.set(xticks=[6,13,20,27],
+              xticklabels=(['7','14','21','28']))
         
                            
     def article_heatmap(self, article, month):
@@ -111,7 +113,7 @@ class wiki_all_access(object):
         Note that not all articles are available for all months. In raw data there are
         ten articles per month.
         Args:
-            article: name of the article. spaces are replaced by '_' (str)
+            article: name of the article (str)
             month: month of analysis (int)
         Returns:
             heatmaps for article
@@ -123,21 +125,29 @@ class wiki_all_access(object):
             df_heatmap = df_heatmap.drop(columns=['timestamp'])
             df_heatmap.set_index('Date', inplace = True)
             
+            df_heatmap.desk = df_heatmap.desk.mul(100)
+            df_heatmap.app = df_heatmap.app.mul(100)
+            df_heatmap.web = df_heatmap.web.mul(100)
+            
             fig,(ax1,ax2) = plt.subplots(1,2)
             #first heatmap
             sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['desk','app','web']],
                         cmap=sns.color_palette('viridis'),
                         annot=True,
+                        annot_kws={"size":9},
+                        fmt='.2f',
                         robust=False,
+                        cbar_kws={'format': '%.0f%%'}, #changes colorbar label to percentage
                         ax=ax1)
-            ax1.set_title(article + '/' + str(month) + ": by access (percentage per day)")
+            for t in ax1.texts: t.set_text(t.get_text() + " %") #adds percentage(%) to value
+            ax1.set_title(article + ' - month ' + str(month) + "\nviews (percentage per day)")
             #second heatmap
             sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['norm_desk', 'norm_app', 'norm_web']],
                         cmap=sns.diverging_palette(220, 20, as_cmap=True),
                         ax=ax2)
-            ax2.set_title(article + '/' + str(month) + ": views (normalized per month)")
+            ax2.set_title(article + ' - month ' + str(month) + "\nviews (normalized per month)")
             ax2.set_xticklabels(ax2.get_xticklabels(), rotation=0)
         
         except ValueError:
             plt.close(fig)
-            print("article not found. use '_' to connect words.")
+            print("article not found in month " + str(month))
