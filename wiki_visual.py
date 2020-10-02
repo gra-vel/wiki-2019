@@ -13,8 +13,9 @@ pio.renderers.default='browser'
 def lang_plot(df, access, language):
     '''
     Plots a line graph for each month of the dataframe
+    Dataframe comes from class wiki_analysis.wiki_all_access
     Args:
-        df: dataframe
+        df: dataframe from get_df() or access_analysis()
         access: desktop, mobile-app, mobile-web or total (str)
         language: English, Spanish, German, Russian (str)
     '''

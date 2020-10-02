@@ -16,7 +16,8 @@ class wiki_all_access(object):
     """
     def __init__(self, filename, encoding):
         '''
-        Initialize an instance, which reads data from csv file. Adds column for days
+        Initialize an instance, which reads data from csv file. Adds column for days.
+        csv file has to come from wiki_import.daily_data
         Args:
             filename: name of csv file (str)
             encoding: encoding of csv file - latin1/utf-16 (str)
@@ -44,34 +45,34 @@ class wiki_all_access(object):
         '''
         #total and percent views
         df_analysis = self.df.assign(total = self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web'],
-                                     desk = self.df['desktop']/(self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web']),
+                                     desktop_1 = self.df['desktop']/(self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web']),
                                      app = self.df['mobile-app']/(self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web']),
                                      web = self.df['mobile-web']/(self.df['desktop'] + self.df['mobile-app'] + self.df['mobile-web']))
         
         #normalized data
-        df_analysis = df_analysis.rename(columns = {'desktop':'norm_desk',
-                                                    'mobile-app':'norm_app',
-                                                    'mobile-web':'norm_web'})
+        df_analysis = df_analysis.rename(columns = {'desktop':'desktop_norm',
+                                                    'mobile-app':'app_norm',
+                                                    'mobile-web':'web_norm'})
         
-        grouper = df_analysis.groupby(['month','article'])['norm_desk']
+        grouper = df_analysis.groupby(['month','article'])['desktop_norm']
         maxes = grouper.transform('max')
         mins = grouper.transform('min')
-        df_analysis = df_analysis.assign(norm_desk=(df_analysis.norm_desk- mins)/(maxes - mins))
+        df_analysis = df_analysis.assign(desktop_norm=(df_analysis.desktop_norm - mins)/(maxes - mins))
         
-        grouper = df_analysis.groupby(['month','article'])['norm_app']
+        grouper = df_analysis.groupby(['month','article'])['app_norm']
         maxes = grouper.transform('max')
         mins = grouper.transform('min')
-        df_analysis = df_analysis.assign(norm_app=(df_analysis.norm_app - mins)/(maxes - mins))
+        df_analysis = df_analysis.assign(app_norm=(df_analysis.app_norm - mins)/(maxes - mins))
         
-        grouper = df_analysis.groupby(['month','article'])['norm_web']
+        grouper = df_analysis.groupby(['month','article'])['web_norm']
         maxes = grouper.transform('max')
         mins = grouper.transform('min')
-        df_analysis = df_analysis.assign(norm_web=(df_analysis.norm_web- mins)/(maxes - mins))
+        df_analysis = df_analysis.assign(web_norm=(df_analysis.web_norm - mins)/(maxes - mins))
         
         #format of timestamp and article
         df_analysis = wiki_func.format_analysis(df_analysis)        
         
-        df_analysis = df_analysis[['article', 'timestamp', 'month', 'days', 'desk', 'app', 'web', 'total', 'norm_desk', 'norm_app', 'norm_web', 'week']]            
+        df_analysis = df_analysis[['article', 'timestamp', 'month', 'days', 'desktop', 'app', 'web', 'total', 'desktop_norm', 'app_norm', 'web_norm', 'week']]
         return df_analysis
     
     
@@ -83,7 +84,7 @@ class wiki_all_access(object):
         Returns:
             dataframe sliced by month
         '''
-        df_plot = pd.melt(self.access_analysis().drop(columns=['timestamp', 'desk', 'app', 'web', 'total']),
+        df_plot = pd.melt(self.access_analysis().drop(columns=['timestamp', 'desktop', 'app', 'web', 'total']),
                           id_vars=['article', 'days', 'week', 'month'],
                           var_name='access',
                           value_name='views')
@@ -91,7 +92,7 @@ class wiki_all_access(object):
         return df_plot
         
     
-    def histogram_month(self, month):
+    def barplot_month(self, month):
         '''
         Plots histogram of articles' views (normalized) by month.
         Args:
@@ -101,7 +102,10 @@ class wiki_all_access(object):
         '''
         g = sns.FacetGrid(self.df_plot(month), col='article', row='access', hue='article', margin_titles=True)
         g.map(sns.barplot, 'days', 'views', order=list(range(1,32)))
-        g.set_titles(col_template='{col_name}', size=8.5)
+        #fixes overlayed subtitles
+        for ax in g.axes.flat:
+            plt.setp(ax.texts, text="")
+        g.set_titles(col_template='{col_name}', size=10)
         g.set(xticks=[6,13,20,27],
               xticklabels=(['7','14','21','28']))
         
@@ -125,16 +129,19 @@ class wiki_all_access(object):
             df_heatmap = df_heatmap.drop(columns=['timestamp'])
             df_heatmap.set_index('Date', inplace = True)
             
-            df_heatmap.desk = df_heatmap.desk.mul(100)
+            df_heatmap.desktop = df_heatmap.desktop.mul(100)
             df_heatmap.app = df_heatmap.app.mul(100)
             df_heatmap.web = df_heatmap.web.mul(100)
             
-            fig,(ax1,ax2) = plt.subplots(1,2)
+            #plt.rcParams['figure.dpi'] = 100 #it's global
+            fig,(ax1,ax2) = plt.subplots(1,2,  figsize=(16, 10))
+            fig.subplots_adjust(wspace=0.3)
+            
             #first heatmap
-            sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['desk','app','web']],
+            sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['desktop','app','web']],
                         cmap=sns.color_palette('viridis'),
                         annot=True,
-                        annot_kws={"size":9},
+                        annot_kws={"size":10},
                         fmt='.2f',
                         robust=False,
                         cbar_kws={'format': '%.0f%%'}, #changes colorbar label to percentage
@@ -142,7 +149,7 @@ class wiki_all_access(object):
             for t in ax1.texts: t.set_text(t.get_text() + " %") #adds percentage(%) to value
             ax1.set_title(article + ' - month ' + str(month) + "\nviews (percentage per day)")
             #second heatmap
-            sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['norm_desk', 'norm_app', 'norm_web']],
+            sns.heatmap(df_heatmap[df_heatmap['article'].isin([article])][['desktop_norm', 'app_norm', 'web_norm']],
                         cmap=sns.diverging_palette(220, 20, as_cmap=True),
                         ax=ax2)
             ax2.set_title(article + ' - month ' + str(month) + "\nviews (normalized per month)")

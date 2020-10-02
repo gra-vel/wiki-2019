@@ -10,6 +10,7 @@ import urllib.request, json
 from urllib.parse import quote
 import time
 
+
 # Importing monthly data
 exceptions_list = {"2019":
                    {"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|Día_Mundial_Sin_Tabaco|Signo_zodiacal|Facebook",
@@ -51,11 +52,6 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
             else:
                 ini_df = pd.concat([ini_df, df])
     ini_df.to_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", index = False, encoding = encode_lang[lang])
-
-# month_data("es", "all-access", "2019")
-# month_data("en", "all-access", "2019")
-# month_data("de", "all-access", "2019")
-# month_data("ru", "all-access", "2019")
 
 # Importing daily data
 def daily_data(lang, access, year, agent='user'):
@@ -109,22 +105,12 @@ def daily_data(lang, access, year, agent='user'):
                 df_month = df_month.iloc[:,2]
                 df3 = pd.merge(df3, df_month, left_index=True, right_index=True)
                 sf += 1
-                #time.sleep(5)
+                time.sleep(1)
         #appends complete data for different months
         if month_loop == 0:
             df_end = df3
             month_loop += 1
         else:
             df_end = pd.concat([df_end, df3])
-            #time.sleep(10)
+            time.sleep(2)
     return df_end
-
-# df_month_es = daily_data("es", "all-access", "2019")
-# df_month_en = daily_data("en", "all-access", "2019")
-# df_month_de = daily_data("de", "all-access", "2019")
-# df_month_ru = daily_data("ru", "all-access", "2019")
-
-# df_month_es.to_csv("dataset\\" + "2019" + "_" + "es" + "_wikidaily.csv", index = False, encoding = 'latin')
-# df_month_de.to_csv("dataset\\" + "2019" + "_" + "de" + "_wikidaily.csv", index = False, encoding = 'utf-16')
-# df_month_en.to_csv("dataset\\" + "2019" + "_" + "en" + "_wikidaily.csv", index = False, encoding = 'utf-16')
-# df_month_ru.to_csv("dataset\\" + "2019" + "_" + "ru" + "_wikidaily.csv", index = False, encoding = 'utf-16')

@@ -7,6 +7,7 @@ Created on Wed Aug  5 16:54:44 2020
 import datetime
 import pandas as pd
 
+
 def daterange(year, month):
     '''
     creates start and end date for daily data fn
@@ -67,4 +68,5 @@ def format_analysis(df):
     df['week'] = [d.isoweekday() for d in df['timestamp']]
     #for article
     df['article'] = df['article'].str.replace('_', ' ')
+    df = df.rename(columns = {'desktop_1':'desktop'})
     return df
