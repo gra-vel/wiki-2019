@@ -10,7 +10,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-class wiki_all_access(object):
+class Wiki_all_access(object):
     """
     Data analysis of most viewed Wikipedia articles by access and month
     """

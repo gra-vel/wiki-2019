@@ -28,17 +28,22 @@ def lang_plot(df, access, language):
         month_views[i]['Date'] = pd.to_datetime(month_views[i]['Date'], format='%Y%m%d%H')
         month_views[i]['Article'] = month_views[i]['Article'].str.replace('_',' ')        
     
-    print('Adding traces...')
+    # print('Adding traces...')
     fig = px.line(month_views[1], x='Date', y='Views', color='Article', template='plotly_white') #hover_name='Article', hover_data=['Views']
-    print('Month: 1')
+    # print('Month: 1')
     for j in range(2, 13):
-        print('Month: ' + str(j))
+        # print('Month: ' + str(j))
         for i in range(0,10):
             fig.add_trace(px.line(month_views[j], x='Date', y='Views', color='Article').data[i])
     
-    print('Update menus')
+    # print('Update menus')
     updatemenus = [dict(type = 'buttons',
-                        direction = 'down',
+                        direction = 'right', 
+                        xanchor = 'left', 
+                        yanchor = 'bottom', 
+                        x = 0, 
+                        y = -0.15, 
+                        font = dict(size=9, color='#000000'),
                         buttons = list([
                             dict(args=[{'visible':[True if x > 0 and x < 11 else False for x in range(1,121)]},
                                        ],
@@ -82,14 +87,19 @@ def lang_plot(df, access, language):
                             ])),
                    ]
     
-    fig.update_layout(        
+    fig.update_layout(
+        width=1000,
+        height=700,
+        autosize=False,
         title = language + ' Wikipedia for 2019',
         titlefont=dict(size=20,
                        color='#7f7f7f'),
+        xaxis_title="",
         hoverlabel=dict(font_size=11), 
         hovermode='x',
-        updatemenus = updatemenus,
-        legend_title_text='Articles')
+        updatemenus = updatemenus,        
+        legend_title_text='Articles'
+        )
     
     fig.update_traces(mode="lines", hovertemplate='Views: %{y:,.0f}') #<extra></extra>
     
