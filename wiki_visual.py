@@ -45,6 +45,9 @@ def lang_plot(df, access, language):
                         y = -0.15, 
                         font = dict(size=9, color='#000000'),
                         buttons = list([
+                            dict(args=[{'visible':[True if x > 0 and x < 121 else False for x in range(1,121)]},
+                                       ],
+                                 label = "All", method = "restyle"),
                             dict(args=[{'visible':[True if x > 0 and x < 11 else False for x in range(1,121)]},
                                        ],
                                  label = "January", method = "restyle"),
@@ -80,10 +83,7 @@ def lang_plot(df, access, language):
                                  label = "November", method = "restyle"),
                             dict(args=[{'visible':[True if x > 110 and x < 121 else False for x in range(1,121)]},
                                        ],
-                                 label = "December", method = "restyle"),
-                            dict(args=[{'visible':[True if x > 0 and x < 121 else False for x in range(1,121)]},
-                                       ],
-                                 label = "All", method = "restyle"),
+                                 label = "December", method = "restyle"),                            
                             ])),
                    ]
     

@@ -24,21 +24,21 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
     converts json to dataframe and saves it as csv file.
     lang: string (en, es, de, etc.) / language of the project
     access: string (all-access, desktop, mobile-app, mobile-web) / platform of access
-    year: string (YYYY) / year of query
+    year: int (YYYY) / year of query
     '''
     encode_lang = {'en':'utf-16', 'es': 'latin1', 'de':'utf-16', 'ru':'utf-16'}
     exceptions_lang = {"es":"Wikipedia:|Especial:|Special:|Spécial:|Anexo:",
                        "en":"Wikipedia:|Especial:|Special:|Spécial:|Anexo:|Main_Page|Portal:|File:",
                        "de":"Wikipedia:|Especial:|Special:|Spécial:|Spezial:|Benutzer:|Datei:",
                        "ru":"Wikipedia:|Especial:|Special:|Заглавная_страница|Служебная:|Википедия:|Файл:"}
-    exceptions_lang[lang] += exceptions_list[year][lang]
+    exceptions_lang[lang] += exceptions_list[str(year)][lang]
     initial_url = "https://wikimedia.org/api/rest_v1/metrics/pageviews/top/"
     proj = lang + ".wikipedia.org/"
     user_access = access + "/"
-    base_url = initial_url + proj + user_access + year + "/"
+    base_url = initial_url + proj + user_access + str(year) + "/"
     #loop for each month of the year
     for i in range(1,13):
-        print("importing: " + lang + " " + str(i) + "-" + year)
+        print("importing: " + lang + " " + str(i) + "-" + str(year))
         with urllib.request.urlopen(base_url + str(i).zfill(2) + "/all-days") as url:
             data = json.loads(url.read().decode())
             df = pd.json_normalize(data["items"][0]["articles"])
@@ -51,7 +51,7 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
                 ini_df = df
             else:
                 ini_df = pd.concat([ini_df, df])
-    ini_df.to_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", index = False, encoding = encode_lang[lang])
+    ini_df.to_csv("dataset\\" + str(year) + "_" + lang + "_wikimonth.csv", index = False, encoding = encode_lang[lang])
 
 # Importing daily data
 def daily_data(lang, access, year, agent='user'):
@@ -59,16 +59,15 @@ def daily_data(lang, access, year, agent='user'):
     retrieves daily data based on output of month_data fn
     lang: string (en, es, de, etc.) / language of the project
     access: string (all-access, desktop, mobile-app, mobile-web) / platform of access
+    year: int (YYYY) / year of query
     agent : string (all-agents, user, spider, automated) / agent type
-    year: string (YYYY) / year of query
-    month: string (MM) / month of query
     
     return: dataframe
     '''
     #check language for encoding
     encode_lang = {'en':'utf-16', 'es':'latin1', 'de':'utf-16', 'ru':'utf-16'}
     #read csv with monthly data
-    df1 = pd.read_csv("dataset\\" + year + "_" + lang + "_wikimonth.csv", encoding = encode_lang[lang])
+    df1 = pd.read_csv("dataset\\" + str(year) + "_" + lang + "_wikimonth.csv", encoding = encode_lang[lang])
     month_loop = 0    
     #loop for months
     for i in range(1,13):        
@@ -79,11 +78,11 @@ def daily_data(lang, access, year, agent='user'):
         sf = 0
         #loop for urls (depends on access and agents)
         for each_url in url_list:            
-            start_date, end_date = wiki_func.daterange(year, str(i))
+            start_date, end_date = wiki_func.daterange(str(year), str(i))
             st = 0
             #loop for articles
             for article in top_articles:                
-                print('retrieving: ' + article + ' views for ' + str(i) + '/' + year)
+                print('retrieving: ' + article + ' views for ' + str(i) + '/' + str(year))
                 wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date                
                 with urllib.request.urlopen(wiki_url,timeout=60) as url:
                     data = json.loads(url.read().decode())
