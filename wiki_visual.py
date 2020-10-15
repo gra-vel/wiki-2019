@@ -88,9 +88,9 @@ def lang_plot(df, access, language):
                    ]
     
     fig.update_layout(
-        width=1000,
-        height=700,
-        autosize=False,
+        #width=1000,
+        #height=700,
+        #autosize=False,
         title = language + ' Wikipedia for 2019',
         titlefont=dict(size=20,
                        color='#7f7f7f'),
