@@ -57,6 +57,7 @@ def change_view_access(df, access, sf):
         pass    
     return df
 
+
 def format_analysis(df):
     '''
     changes format of columns in dataframe
