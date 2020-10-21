@@ -4,7 +4,7 @@
 
 The goal of this project is to analyze the trend of articles’ views in Wikipedia for four languages (English, Spanish, German and Russian) in 2019. The code for this analysis is limited to this specific project and works best if all ways of accessing Wikipedia are taken into account (desktop, mobile app and mobile web).
 
-**The interactive plots are displayed in nbviewer -- [Jupyter notebook]()**
+**The interactive plots are displayed in nbviewer -- [Jupyter notebook](https://nbviewer.jupyter.org/github/gra-vel/wiki-2019/blob/master/wiki_2019.ipynb)**
 
 There are three main parts in the project: import and wrangling, analysis and visualization. I used `pandas`, `plotly` and `seaborn`.
 
