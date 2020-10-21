@@ -28,15 +28,15 @@ def lang_plot(df, access, language):
         month_views[i]['Date'] = pd.to_datetime(month_views[i]['Date'], format='%Y%m%d%H')
         month_views[i]['Article'] = month_views[i]['Article'].str.replace('_',' ')        
     
-    # print('Adding traces...')
+    # traces
     fig = px.line(month_views[1], x='Date', y='Views', color='Article', template='plotly_white') #hover_name='Article', hover_data=['Views']
-    # print('Month: 1')
+    # loop for months
     for j in range(2, 13):
-        # print('Month: ' + str(j))
+        # loop for articles
         for i in range(0,10):
             fig.add_trace(px.line(month_views[j], x='Date', y='Views', color='Article').data[i])
     
-    # print('Update menus')
+    # menu-buttons
     updatemenus = [dict(type = 'buttons',
                         direction = 'right', 
                         xanchor = 'left', 
