@@ -1,0 +1,34 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 14 11:23:01 2021
+
+@author: G3
+"""
+import wiki_import
+import wiki_analysis
+import wiki_visual
+import pandas as pd
+
+### 2020 Update
+
+# Importing monthly data
+wiki_import.month_data("es", "all-access", 2020)
+
+# Importing daily data
+es_daily = wiki_import.daily_data("es", "all-access", 2020)
+
+# Save new files
+es_daily.to_csv("dataset\\2020_es_wikidaily.csv", index = False, encoding = "latin1")
+
+# Analysis
+es_wiki20 = wiki_analysis.Wiki_all_access("2020_es_wikidaily.csv", "latin1")
+#es_daily = pd.read_csv("dataset\\2020_es_wikidaily.csv", encoding = "latin1")
+es_wiki20.barplot_month(12)
+#Lali Espósito 1,2,4
+#Pandemia de gripe de 1918 4
+#Zoidaco <,7,9,10
+#Cleopatra 9,10,11,12
+#Traducción 9,10
+#YouTube 9
+
+es_wiki20.article_heatmap("Francisco Sagasti", 11)
