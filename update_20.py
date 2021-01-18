@@ -54,6 +54,11 @@ en_wiki20.article_heatmap("2009 flu pandemic", 3)
     #Laptop 3
     #Cleopatra 12
 
+ru_wiki20 = wiki_analysis.Wiki_all_access("2020_ru_wikidaily.csv", "utf-16")
+ru_wiki20.barplot_month(1)
+ru_wiki20.article_heatmap("Гарри Поттер (серия фильмов)", 1)
+#Эффект_Даннинга_—_Крюгера 1
+
 #Visualization
 wiki_visual.lang_plot(es_wiki20.get_df(), "total", "Spanish")
 wiki_visual.lang_plot(en_wiki20.get_df(), "total", "English")
