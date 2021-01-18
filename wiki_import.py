@@ -19,7 +19,7 @@ exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|D
                    "2020":{"es":"|Lali_Espósito|Zodiaco|Cleopatra|Traducción|YouTube|Facebook",
                            "en":"|Media|United_States_Senate|Wikipedia|Bible|Template:|Under_arms|Laptop|Cleopatra",
                            "de":"",
-                           "ru":"|Эффект_Даннинга_—_Крюгера"}}
+                           "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"}}
 
 def month_data(lang, access, year, exceptions_list=exceptions_list):
     '''

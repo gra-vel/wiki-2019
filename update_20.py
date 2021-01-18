@@ -15,19 +15,19 @@ import pandas as pd
 #wiki_import.month_data("es", "all-access", 2020)
 #wiki_import.month_data("en", "all-access", 2020)
 wiki_import.month_data("de", "all-access", 2020)
-wiki_import.month_data("ru", "all-access", 2020)
+#wiki_import.month_data("ru", "all-access", 2020)
 
 # Importing daily data
 #es_daily = wiki_import.daily_data("es", "all-access", 2020)
 #en_daily = wiki_import.daily_data("en", "all-access", 2020)
 de_daily = wiki_import.daily_data("de", "all-access", 2020)
-ru_daily = wiki_import.daily_data("ru", "all-access", 2020)
+#ru_daily = wiki_import.daily_data("ru", "all-access", 2020)
 
 # Save new files
 #es_daily.to_csv("dataset\\2020_es_wikidaily.csv", index = False, encoding = "latin1")
 #en_daily.to_csv("dataset\\2020_en_wikidaily.csv", index = False, encoding = "utf-16")
 de_daily.to_csv("dataset\\2020_de_wikidaily.csv", index = False, encoding = "utf-16")
-ru_daily.to_csv("dataset\\2020_ru_wikidaily.csv", index = False, encoding = "utf-16")
+#ru_daily.to_csv("dataset\\2020_ru_wikidaily.csv", index = False, encoding = "utf-16")
 
 
 # Analysis
@@ -54,11 +54,28 @@ en_wiki20.article_heatmap("2009 flu pandemic", 3)
     #Laptop 3
     #Cleopatra 12
 
+#ru_daily = pd.read_csv("dataset\\2020_ru_wikidaily.csv", encoding = "utf-16")
 ru_wiki20 = wiki_analysis.Wiki_all_access("2020_ru_wikidaily.csv", "utf-16")
-ru_wiki20.barplot_month(1)
-ru_wiki20.article_heatmap("Гарри Поттер (серия фильмов)", 1)
-#Эффект_Даннинга_—_Крюгера 1
+ru_wiki20.barplot_month(12)
+ru_wiki20.article_heatmap("Видеохостинг", 12)
+#Эффект_Даннинга_—_Крюгера 1 2
+#Марихуана 3
+#YouTube 2 4 5 9 10 11 12
+#Путин,_Владимир_Владимирович 1 4 5 6 7 9 10
+#Кисловодск 7 8
+#Моргенштерн_(музыкант) 7 12
+#Москва 10 11 12
+#ВКонтакте 12
+#Санкт-Петербург 12
+#Mail.ru_Group 12
+    #Список_фильмов_кинематографической_вселенной_Marvel 2
+    #Моргенштерн_(музыкант) 7 12
+    #Видеохостинг 12
+    #Сан-Бруно 12
+    #Google 12
+
 
 #Visualization
 wiki_visual.lang_plot(es_wiki20.get_df(), "total", "Spanish")
 wiki_visual.lang_plot(en_wiki20.get_df(), "total", "English")
+wiki_visual.lang_plot(ru_wiki20.get_df(), "total", "Russian")
