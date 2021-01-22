@@ -18,7 +18,7 @@ exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|D
                            "ru":"|Borderlands:_The_Pre-Sequel!|YouTube|Гарри_Поттер|Мамонтов,_Савва_Иванович|Тест_Тьюринга|Морские_термины|Эффект_Даннинга_—_Крюгера|Loopback|Список_фильмов_кинематографической_вселенной_Marvel|HTML|Скалярное_произведение|Нарака|Воскресение|Клинический_архив_гениальности_и_одарённости|ВКонтакте|Стрыйковский,_Матей"},
                    "2020":{"es":"|Lali_Espósito|Zodiaco|Cleopatra|Traducción|YouTube|Facebook",
                            "en":"|Media|United_States_Senate|Wikipedia|Bible|Template:|Under_arms|Laptop|Cleopatra",
-                           "de":"",
+                           "de":"|Orangemorange|Pornhub|XHamster|Hauptseite|OpenSearch|Fußball-Weltmeisterschaft_2018|Rom|ABC|Vagina|Ischgl|Loredana",
                            "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"}}
 
 def month_data(lang, access, year, exceptions_list=exceptions_list):
@@ -86,7 +86,7 @@ def daily_data(lang, access, year, agent='user'):
             #loop for articles
             for article in top_articles:                
                 print('retrieving: ' + article + ' views for ' + str(i) + '/' + str(year))
-                wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date                
+                wiki_url = each_url + quote(article, safe='') + "/daily/" + start_date + "/" + end_date                
                 with urllib.request.urlopen(wiki_url,timeout=60) as url:
                     data = json.loads(url.read().decode())
                 df2 = pd.json_normalize(data["items"])

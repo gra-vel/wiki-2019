@@ -74,8 +74,23 @@ ru_wiki20.article_heatmap("Видеохостинг", 12)
     #Сан-Бруно 12
     #Google 12
 
+de_wiki20 = wiki_analysis.Wiki_all_access("2020_de_wikidaily.csv", "utf-16")
+de_wiki20.barplot_month(7)
+de_wiki20.article_heatmap("Helene Fischer", 12)
+#Orangemorange 1
+#Pornhub 1 2 3 4 5
+#XHamster 1 2 4 5
+#Hauptseite 1 2 4 5
+#OpenSearch 1 2 4
+#Fußball-Weltmeisterschaft_2018 2
+#Rom 2
+#ABC 4
+#Vagina 8
+    #Ischgl 4
+    #Loredana_(Rapperin) 7
 
 #Visualization
 wiki_visual.lang_plot(es_wiki20.get_df(), "total", "Spanish")
 wiki_visual.lang_plot(en_wiki20.get_df(), "total", "English")
 wiki_visual.lang_plot(ru_wiki20.get_df(), "total", "Russian")
+wiki_visual.lang_plot(de_wiki20.get_df(), "total", "German")
