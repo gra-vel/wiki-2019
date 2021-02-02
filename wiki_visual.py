@@ -10,7 +10,7 @@ import plotly.io as pio
 pio.renderers.default='browser' 
 
 
-def lang_plot(df, access, language):
+def lang_plot(df, access, language, year=2019): #dded year in update 2020 to change title
     '''
     Plots a line graph for each month of the dataframe
     Dataframe comes from class wiki_analysis.wiki_all_access
@@ -90,8 +90,8 @@ def lang_plot(df, access, language):
     fig.update_layout(
         #width=1000,
         #height=700,
-        #autosize=False,
-        title = language + ' Wikipedia for 2019',
+        #autosize=False,        
+        title = language + ' Wikipedia for ' + str(year),
         titlefont=dict(size=20,
                        color='#7f7f7f'),
         xaxis_title="",
