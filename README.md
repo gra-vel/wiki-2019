@@ -37,3 +37,7 @@ After excluding the articles that may have had its views from automated programs
 ### Further development
 
 The scripts could be adapted for additional years. Each year would need its own analysis to determine which articles should be excluded, due to possible automated views. It would be possible to add an additional function capable of sorting out which articles may have automated views. 
+
+ ### Update 2020
+ 
+ Data from year 2020 was added.
