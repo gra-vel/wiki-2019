@@ -12,12 +12,14 @@ import time
 
 
 # Importing monthly data
-exceptions_list = {"2019":
-                   {"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|Día_Mundial_Sin_Tabaco|Signo_zodiacal|Facebook",
-                    "en":"|XHamster|Grover|Louis_Tomlinson|Rheology|Line_shaft|William_Murdoch|Kayden_Boche|Algorithms_for_calculating_variance|Jay_IDK|List_of_Queen_of_the_South_episodes|Bible|Wikipedia|List_of_most_popular_websites|Simple_Mail_Transfer_Protocol|IPv4|Apple_Network_Server|List_of_awards_and_nominations_received_by_Meryl_Streep|The_Who|Who's_Next|Capture_of_Shusha|Brooklyn",
-                    "de":"|Hauptseite|Anthocyane|Antoni_Tàpies|Formelsammlung_Trigonometrie|Pornhub|XHamster|Tobias_Sammet|Edguy|Avantasia|St�ckgut|Sch�ttgut|F�rdertechnik|Hacker|Fibromyalgie|Alphastrahlung|John_Alcock|Fußball_2000|Videoschnittsoftware|Ötzi|OpenSearch|Alfred_Werner_Maurer|Design_Thinking|Fußball-Weltmeisterschaft_2018|Paramore|ARD|ZDF",
-                    "ru":"|Borderlands:_The_Pre-Sequel!|YouTube|Гарри_Поттер|Мамонтов,_Савва_Иванович|Тест_Тьюринга|Морские_термины|Эффект_Даннинга_—_Крюгера|Loopback|Список_фильмов_кинематографической_вселенной_Marvel|HTML|Скалярное_произведение|Нарака|Воскресение|Клинический_архив_гениальности_и_одарённости|ВКонтакте|Стрыйковский,_Матей"},
-                   "2020":{""}}
+exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|Día_Mundial_Sin_Tabaco|Signo_zodiacal|Facebook",
+                           "en":"|XHamster|Grover|Louis_Tomlinson|Rheology|Line_shaft|William_Murdoch|Kayden_Boche|Algorithms_for_calculating_variance|Jay_IDK|List_of_Queen_of_the_South_episodes|Bible|Wikipedia|List_of_most_popular_websites|Simple_Mail_Transfer_Protocol|IPv4|Apple_Network_Server|List_of_awards_and_nominations_received_by_Meryl_Streep|The_Who|Who's_Next|Capture_of_Shusha|Brooklyn",
+                           "de":"|Hauptseite|Anthocyane|Antoni_Tàpies|Formelsammlung_Trigonometrie|Pornhub|XHamster|Tobias_Sammet|Edguy|Avantasia|St�ckgut|Sch�ttgut|F�rdertechnik|Hacker|Fibromyalgie|Alphastrahlung|John_Alcock|Fußball_2000|Videoschnittsoftware|Ötzi|OpenSearch|Alfred_Werner_Maurer|Design_Thinking|Fußball-Weltmeisterschaft_2018|Paramore|ARD|ZDF",
+                           "ru":"|Borderlands:_The_Pre-Sequel!|YouTube|Гарри_Поттер|Мамонтов,_Савва_Иванович|Тест_Тьюринга|Морские_термины|Эффект_Даннинга_—_Крюгера|Loopback|Список_фильмов_кинематографической_вселенной_Marvel|HTML|Скалярное_произведение|Нарака|Воскресение|Клинический_архив_гениальности_и_одарённости|ВКонтакте|Стрыйковский,_Матей"},
+                   "2020":{"es":"|Lali_Espósito|Zodiaco|Cleopatra|Traducción|YouTube|Facebook",
+                           "en":"|Media|United_States_Senate|Wikipedia|Bible|Template:|Under_arms|Laptop|Cleopatra",
+                           "de":"|Orangemorange|Pornhub|XHamster|Hauptseite|OpenSearch|Fußball-Weltmeisterschaft_2018|Rom|ABC|Vagina|Ischgl|Loredana",
+                           "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"}}
 
 def month_data(lang, access, year, exceptions_list=exceptions_list):
     '''
@@ -54,7 +56,6 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
                 ini_df = pd.concat([ini_df, df])
     ini_df.to_csv("dataset\\" + str(year) + "_" + lang + "_wikimonth.csv", index = False, encoding = encode_lang[lang])
 
-
 # Importing daily data
 def daily_data(lang, access, year, agent='user'):
     '''
@@ -85,7 +86,7 @@ def daily_data(lang, access, year, agent='user'):
             #loop for articles
             for article in top_articles:                
                 print('retrieving: ' + article + ' views for ' + str(i) + '/' + str(year))
-                wiki_url = each_url + quote(article) + "/daily/" + start_date + "/" + end_date                
+                wiki_url = each_url + quote(article, safe='') + "/daily/" + start_date + "/" + end_date                
                 with urllib.request.urlopen(wiki_url,timeout=60) as url:
                     data = json.loads(url.read().decode())
                 df2 = pd.json_normalize(data["items"])
