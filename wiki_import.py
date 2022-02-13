@@ -9,7 +9,9 @@ import pandas as pd
 import urllib.request, json
 from urllib.parse import quote
 import time
+import ssl
 
+context = ssl._create_unverified_context()
 
 # Importing monthly data
 exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|Día_Mundial_Sin_Tabaco|Signo_zodiacal|Facebook",
@@ -19,7 +21,11 @@ exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|D
                    "2020":{"es":"|Lali_Espósito|Zodiaco|Cleopatra|Traducción|YouTube|Facebook",
                            "en":"|Media|United_States_Senate|Wikipedia|Bible|Template:|Under_arms|Laptop|Cleopatra",
                            "de":"|Orangemorange|Pornhub|XHamster|Hauptseite|OpenSearch|Fußball-Weltmeisterschaft_2018|Rom|ABC|Vagina|Ischgl|Loredana",
-                           "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"}}
+                           "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"},
+                   "2021":{"es":"|Cleopatra|YouTube|Zodiaco|Traducción|Facebook|Estados_Unidos|España",
+                           "en":"|Cleopatra|Bible|Google_logo|Microsoft_Office",
+                           "de":"",
+                           "ru":""}}
 
 def month_data(lang, access, year, exceptions_list=exceptions_list):
     '''
@@ -42,7 +48,7 @@ def month_data(lang, access, year, exceptions_list=exceptions_list):
     #loop for each month of the year
     for i in range(1,13):
         print("importing: " + lang + " " + str(i) + "-" + str(year))
-        with urllib.request.urlopen(base_url + str(i).zfill(2) + "/all-days") as url:
+        with urllib.request.urlopen(base_url + str(i).zfill(2) + "/all-days", context=context) as url:
             data = json.loads(url.read().decode())
             df = pd.json_normalize(data["items"][0]["articles"])
             df = df.iloc[0:50]
@@ -87,7 +93,7 @@ def daily_data(lang, access, year, agent='user'):
             for article in top_articles:                
                 print('retrieving: ' + article + ' views for ' + str(i) + '/' + str(year))
                 wiki_url = each_url + quote(article, safe='') + "/daily/" + start_date + "/" + end_date                
-                with urllib.request.urlopen(wiki_url,timeout=60) as url:
+                with urllib.request.urlopen(wiki_url,timeout=60, context=context) as url:
                     data = json.loads(url.read().decode())
                 df2 = pd.json_normalize(data["items"])
                 df2 = df2.iloc[:,[1,3,6]]
