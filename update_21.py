@@ -37,8 +37,8 @@ es_wiki21.article_heatmap("Caso Wanninkhof", 11)
 
 #en_daily = pd.read_csv("dataset\\2021_en_wikidaily.csv", encoding = "utf-16")
 en_wiki21 = wiki_analysis.Wiki_all_access("2021_en_wikidaily.csv", "utf-16")
-en_wiki21.barplot_month(12)
-en_wiki21.article_heatmap("Microsoft Office", 5)
+en_wiki21.barplot_month(5)
+en_wiki21.article_heatmap("Charles Sobhraj", 4)
 
 
 # Visualization

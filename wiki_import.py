@@ -23,7 +23,7 @@ exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|D
                            "de":"|Orangemorange|Pornhub|XHamster|Hauptseite|OpenSearch|Fußball-Weltmeisterschaft_2018|Rom|ABC|Vagina|Ischgl|Loredana",
                            "ru":"|Эффект_Даннинга_—_Крюгера|Марихуана|YouTube|Путин,_Владимир_Владимирович|Кисловодск|Моргенштерн|Москва|ВКонтакте|Санкт-Петербург|Mail.ru_Group|Список_фильмов_кинематографической_вселенной_Marvel|Видеохостинг|Сан-Бруно|Google"},
                    "2021":{"es":"|Cleopatra|YouTube|Zodiaco|Traducción|Facebook|Estados_Unidos|España",
-                           "en":"|Cleopatra|Bible|Google_logo|Microsoft_Office",
+                           "en":"|Cleopatra|Bible|Google_logo|Microsoft_Office|XXXX",
                            "de":"",
                            "ru":""}}
 
