@@ -37,12 +37,12 @@ es_wiki21.article_heatmap("Caso Wanninkhof", 11)
 
 #en_daily = pd.read_csv("dataset\\2021_en_wikidaily.csv", encoding = "utf-16")
 en_wiki21 = wiki_analysis.Wiki_all_access("2021_en_wikidaily.csv", "utf-16")
-en_wiki21.barplot_month(5)
-en_wiki21.article_heatmap("Charles Sobhraj", 4)
+en_wiki21.barplot_month(12)
+en_wiki21.article_heatmap("YouTube", 7)
 
 
 # Visualization
 wiki_visual.lang_plot(es_wiki21.get_df(), "total", "Spanish", 2021)
-# wiki_visual.lang_plot(en_wiki20.get_df(), "total", "English", 2021)
+wiki_visual.lang_plot(en_wiki21.get_df(), "total", "English", 2021)
 # wiki_visual.lang_plot(ru_wiki20.get_df(), "total", "Russian", 2021)
 # wiki_visual.lang_plot(de_wiki20.get_df(), "total", "German", 2021)
