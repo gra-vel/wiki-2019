@@ -25,7 +25,7 @@ exceptions_list = {"2019":{"es":"|Martina_Stoessel|Lali_Espósito|Kayden_Boche|D
                    "2021":{"es":"|Cleopatra|YouTube|Zodiaco|Traducción|Facebook|Estados_Unidos|España",
                            "en":"|Cleopatra|Bible|Google_logo|Microsoft_Office|XXXX|Skathi|YouTube",
                            "de":"",
-                           "ru":""}}
+                           "ru":"|YouTube|Google|ВКонтакте|Москва|Гарри_Поттер|Python|Видеохостинг|Моргенштерн|RuTracker.org"}}
 
 def month_data(lang, access, year, exceptions_list=exceptions_list):
     '''
